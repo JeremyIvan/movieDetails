@@ -118,4 +118,22 @@ movieRouter.route('/update/:movieId')
     .catch(err => next(err))
 })
 
+movieRouter.route('/delete/:movieId')
+.delete((req, res, next) => {
+    Movies.findByIdAndRemove(req.params.movieId)
+        .then(movie => {
+            if ( movie != null) {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json({status: 'successful'})
+            }
+            else {
+                res.status = 422
+                res.setHeader('Content-Type', 'application/json')
+                res.json({status: 'unsuccessful'})
+            }
+        }, err => next(err))
+        .catch(err => next(err))
+})
+
 module.exports = movieRouter
