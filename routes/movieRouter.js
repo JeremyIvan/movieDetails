@@ -60,6 +60,7 @@ movieRouter.route('/movie/:movieId/writers')
 })
 
 // Search for Movies by writer
+// Refactor to take in form-data instead of using req.params
 movieRouter.route('/writers/:movieWriter')
 .get((req, res, next) => {
     Movies.aggregate(
@@ -84,7 +85,7 @@ movieRouter.route('/writers/:movieWriter')
 })
 
 // search by title/plot/actor/all
-// movieRouter.route('/search/')
+// movieRouter.route('/search')
 // .get((req, res, next) => {
 //     Movies.find({})
 //     .then(movies => {
@@ -92,6 +93,8 @@ movieRouter.route('/writers/:movieWriter')
 //     })
 // })
 
+// Refactor to show correct status
+// does not show existing status instead shows successful
 movieRouter.route('/update/:movieId')
 .put((req, res, next) => {
     Movies.findByIdAndUpdate(req.params.movieId, {
@@ -118,6 +121,7 @@ movieRouter.route('/update/:movieId')
     .catch(err => next(err))
 })
 
+// Refactor to take in form-data instead of using req.params
 movieRouter.route('/delete/:movieId')
 .delete((req, res, next) => {
     Movies.findByIdAndRemove(req.params.movieId)
