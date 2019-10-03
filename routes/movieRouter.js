@@ -1,6 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const _ = require('lodash')
+const multer = require('multer')
+
+var upload = multer()
 
 const Movies = require('../models/movieDetails')
 
@@ -14,7 +17,6 @@ movieRouter.route('/movies')
     .then(movies => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        // res.json({title: movies.title, plot: movies.plot})
         res.json(movies)
     }, err => next(err))
     .catch(err => next(err))
@@ -27,7 +29,6 @@ movieRouter.route('/movie/:movieId')
     .then(movie => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        // res.json(movie)
         res.json({title: movie.title, plot: movie.plot})
     }, err => next(err))
     .catch(err => next(err))
@@ -40,7 +41,6 @@ movieRouter.route('/movie/:movieId/countries')
     .then(movie => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        // res.json(movie)
         res.json({countries: movie.countries})
     }, err => next(err))
     .catch(err => next(err))
@@ -53,24 +53,22 @@ movieRouter.route('/movie/:movieId/writers')
     .then(movie => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        // res.json(movie)
         res.json({writers: movie.writers})
     }, err => next(err))
     .catch(err => next(err))
 })
 
 // Search for Movies by writer
-// Refactor to take in form-data instead of using req.params
-movieRouter.route('/writers/:movieWriter')
-.get((req, res, next) => {
+movieRouter.route('/writers')
+.get(upload.none(), (req, res, next) => {
     Movies.aggregate(
         [
-            { 
-                $match: { "writers": req.params.movieWriter } 
+            {  
+                $match: { "writers": req.body.movieWriter } 
             },
-            { 
+            {
                 $group: { 
-                    _id : req.params.movieWriter, 
+                    _id : req.body.movieWriter,
                     movies: {$push : "$title"}
                 } 
             }
@@ -79,24 +77,15 @@ movieRouter.route('/writers/:movieWriter')
     .then(movies => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
-        res.json({movies: _.head(movies).movies })
+        res.json({ movies: _.head(movies).movies })
     }, err => next(err))
     .catch(err => next(err))
 })
 
-// search by title/plot/actor/all
-// movieRouter.route('/search')
-// .get((req, res, next) => {
-//     Movies.find({})
-//     .then(movies => {
-
-//     })
-// })
-
 // Refactor to show correct status
 // does not show existing status instead shows successful
 movieRouter.route('/update/:movieId')
-.put((req, res, next) => {
+.post(upload.none(), (req, res, next) => {
     Movies.findByIdAndUpdate(req.params.movieId, {
         $set: req.body
     }, { new: true })
@@ -111,20 +100,19 @@ movieRouter.route('/update/:movieId')
             res.setHeader('Content-Type', 'application/json')
             res.json({status: "unsuccessful"})
         }
-        else if(movie.equals(req.body)){
-            res.status = 422
-            res.setHeader('Content-Type', 'application/json')
-            res.json({status: "existing"})
-        }
+        // else if(movie.equals(req.body)){
+        //     res.status = 422
+        //     res.setHeader('Content-Type', 'application/json')
+        //     res.json({status: "existing"})
+        // }
         
     }, err => next(err))
     .catch(err => next(err))
 })
 
-// Refactor to take in form-data instead of using req.params
-movieRouter.route('/delete/:movieId')
-.delete((req, res, next) => {
-    Movies.findByIdAndRemove(req.params.movieId)
+movieRouter.route('/delete')
+.get(upload.none(), (req, res, next) => {
+    Movies.findByIdAndRemove(req.body.movieId)
         .then(movie => {
             if ( movie != null) {
                 res.statusCode = 200
@@ -134,10 +122,69 @@ movieRouter.route('/delete/:movieId')
             else {
                 res.status = 422
                 res.setHeader('Content-Type', 'application/json')
-                res.json({status: 'unsuccessful'})
+                res.json({status: 'movie does not exists'})
             }
         }, err => next(err))
         .catch(err => next(err))
+})
+
+// search by title/plot/actor/all
+movieRouter.route('/search')
+.get(upload.none(), (req, res, next) => {
+    if(Object.keys(req.body).length === 1){
+        if(_.head(Object.keys(req.body)) === "searchByTitle") {
+            Movies.find({title: _.head(Object.values(req.body))})
+            .then(movie => {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json(movie)
+                // res.json({title: movie.title, plot: movie.plot, actors: movie.actors})
+            }, err => next(err))
+            .catch(err => next(err))
+        }
+        else if(_.head(Object.keys(req.body)) === "searchByPlot") {
+            Movies.find({plot: _.head(Object.values(req.body))})
+            .then(movie => {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json(movie)
+                // res.json({title: movie.title, plot: movie.plot, actors: movie.actors})
+            }, err => next(err))
+            .catch(err => next(err))
+        }
+        else if(_.head(Object.keys(req.body)) === "searchByActor") {
+            Movies.find({actors: _.head(Object.values(req.body))})
+            .then(movie => {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json(movie)
+                // res.json({title: movie.title, plot: movie.plot, actors: movie.actors})
+            }, err => next(err))
+            .catch(err => next(err))
+        }
+        else if(_.head(Object.keys(req.body)) === "searchByAll") {
+            Movies.find({$or: [{title: _.head(Object.values(req.body))}, {$or: [{plot: _.head(Object.values(req.body))}, {actors: _.head(Object.values(req.body))}]}]})
+            .then(movie => {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+                res.json(movie)
+                // res.json({title: movie.title, plot: movie.plot, actors: movie.actors})
+            }, err => next(err))
+            .catch(err => next(err))
+        }
+        else {
+
+        }
+    
+        // res.statusCode = 200
+        // res.setHeader('Content-Type', 'application/json')
+        // res.json({key: _.head(Object.keys(req.body)) , content: req.body})
+    }
+    else {
+        res.statusCode = 400
+        res.setHeader('Content-Type', 'application/json')
+        res.json({status: 'unsuccessful'})
+    }
 })
 
 module.exports = movieRouter
