@@ -15,3 +15,23 @@ exports.extractFields = (data, fields) => {
 
     return results
 }
+
+// exports.searchItems = (searchId) => {
+//     Movies.find({title: new RegExp(_.head(Object.values(req.body)), 'g')})
+//             .then(movies => {
+//                 res.statusCode = 200
+//                 res.setHeader('Content-Type', 'application/json')
+//                 res.json(utils.extractFields(movies, fields))
+//             }, err => next(err))
+//             .catch(err => next(err))
+// }
+
+exports.changeImage = (poster) => {
+    let posterLink = poster
+    let changeString = "https"
+    let regex = /https?/g
+
+    let output = posterLink.replace(regex, changeString)
+
+    return output
+}
