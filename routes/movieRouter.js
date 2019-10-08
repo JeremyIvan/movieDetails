@@ -20,17 +20,24 @@ movieRouter.route('/movies')
 .get(cors.cors, (req, res, next) => {
     Movies.find({}).limit(10)
     .then(movies => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-
-        movies.forEach(movie => {
-            if(movie.poster !== null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
-        })
-
-        res.json(movies)
+        if (movies !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+    
+            movies.forEach(movie => {
+                if(movie.poster !== null){
+                    let newPosterLink = utils.changeImage(movie.poster)
+                    movie.poster = newPosterLink
+                }
+            })
+    
+            res.json(movies)
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'No movies found'})
+        }
     }, err => next(err))
     .catch(err => next(err))
 })
@@ -42,17 +49,24 @@ movieRouter.route('/movies/:offset')
 .get(cors.cors, (req, res, next) => {
     Movies.find({}).skip(Number(req.params.offset)).limit(10)
     .then(movies => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-
-        movies.forEach(movie => {
-            if(movie.poster !== null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
-        })
-
-        res.json(movies)
+        if (movie !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+    
+            movies.forEach(movie => {
+                if(movie.poster !== null){
+                    let newPosterLink = utils.changeImage(movie.poster)
+                    movie.poster = newPosterLink
+                }
+            })
+    
+            res.json(movies)
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
     }, err => next(err))
     .catch(err => next(err))
 })
@@ -65,9 +79,16 @@ movieRouter.route('/movie/:movieId')
 .get(cors.cors, (req, res, next) => {
     Movies.findById(req.params.movieId)
     .then(movie => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.json({title: movie.title, plot: movie.plot})
+        if (movie !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.json({title: movie.title, plot: movie.plot})
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
     }, err => next(err))
     .catch(err => next(err))
 })
@@ -79,15 +100,22 @@ movieRouter.route('/movie/:movieId/all')
 .get(cors.cors, (req, res, next) => {
     Movies.findById(req.params.movieId)
     .then(movie => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-
-        if(movie.poster !== null){
-            let newPosterLink = utils.changeImage(movie.poster)
-            movie.poster = newPosterLink
+        if (movie !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+    
+            if(movie.poster !== null){
+                let newPosterLink = utils.changeImage(movie.poster)
+                movie.poster = newPosterLink
+            }
+    
+            res.json(movie)
         }
-
-        res.json(movie)
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
     }, err => next(err))
     .catch(err => next(err))
 })
@@ -100,9 +128,16 @@ movieRouter.route('/movie/:movieId/countries')
 .get(cors.cors, (req, res, next) => {
     Movies.findById(req.params.movieId)
     .then(movie => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.json({countries: movie.countries})
+        if (movie !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.json({countries: movie.countries})
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
     }, err => next(err))
     .catch(err => next(err))
 })
@@ -115,9 +150,16 @@ movieRouter.route('/movie/:movieId/writers')
 .get(cors.cors, (req, res, next) => {
     Movies.findById(req.params.movieId)
     .then(movie => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
-        res.json({writers: movie.writers})
+        if(movie !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.json({writers: movie.writers})
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
     }, err => next(err))
     .catch(err => next(err))
 })
@@ -164,6 +206,22 @@ movieRouter.route('/writers')
 movieRouter.route('/update/:movieId')
 .options(cors.corsWithOptions, (req, res) => { 
     res.sendStatus(200) 
+})
+.get(cors.cors, (req, res, next) => {
+    Movies.findById(req.params.movieId)
+    .then(movie => {
+        if(movie !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.json({title: movie.title, plot: movie.plot})
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
+    }, err => next(err))
+    .catch(err => next(err))
 })
 .post(upload.none(), (req, res, next) => {
     Movies.findById(req.params.movieId)
@@ -323,8 +381,6 @@ movieRouter.route('/search')
         res.setHeader('Content-Type', 'application/json')
         res.json({status: 'unsuccessful'})
     }
-
-    // console.log(req) 
 })
 
 module.exports = movieRouter
