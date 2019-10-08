@@ -25,7 +25,7 @@ movieRouter.route('/movies')
             res.setHeader('Content-Type', 'application/json')
     
             movies.forEach(movie => {
-                if(movie.poster !== null){
+                if(movie.poster != null){
                     let newPosterLink = utils.changeImage(movie.poster)
                     movie.poster = newPosterLink
                 }
@@ -54,7 +54,7 @@ movieRouter.route('/movies/:offset')
             res.setHeader('Content-Type', 'application/json')
     
             movies.forEach(movie => {
-                if(movie.poster !== null){
+                if(movie.poster != null){
                     let newPosterLink = utils.changeImage(movie.poster)
                     movie.poster = newPosterLink
                 }
@@ -104,7 +104,7 @@ movieRouter.route('/movie/:movieId/all')
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
     
-            if(movie.poster !== null){
+            if(movie.poster != null){
                 let newPosterLink = utils.changeImage(movie.poster)
                 movie.poster = newPosterLink
             }
@@ -282,7 +282,7 @@ movieRouter.route('/search')
     res.sendStatus(200) 
 })
 .post(cors.cors, upload.none(), (req, res, next) => {
-    let fields = ['_id', 'title', 'plot', 'actors', 'poster']
+    let fields = ['_id', 'title', 'plot', 'actors', 'poster', 'rated', 'genres']
 
     if(Object.keys(req.body).length === 1){
         if(_.head(Object.keys(req.body)) === "searchByTitle") {
@@ -292,7 +292,7 @@ movieRouter.route('/search')
                 res.setHeader('Content-Type', 'application/json')
 
                 movies.forEach(movie => {
-                    if(movie.poster !== null){
+                    if(movie.poster != null){
                         let newPosterLink = utils.changeImage(movie.poster)
                         movie.poster = newPosterLink
                     }
@@ -309,7 +309,7 @@ movieRouter.route('/search')
                 res.setHeader('Content-Type', 'application/json')
 
                 movies.forEach(movie => {
-                    if(movie.poster !== null){
+                    if(movie.poster != null){
                         let newPosterLink = utils.changeImage(movie.poster)
                         movie.poster = newPosterLink
                     }
@@ -326,7 +326,7 @@ movieRouter.route('/search')
                 res.setHeader('Content-Type', 'application/json')
 
                 movies.forEach(movie => {
-                    if(movie.poster !== null){
+                    if(movie.poster != null){
                         let newPosterLink = utils.changeImage(movie.poster)
                         movie.poster = newPosterLink
                     }
@@ -337,13 +337,32 @@ movieRouter.route('/search')
             .catch(err => next(err))
         }
         else if(_.head(Object.keys(req.body)) === "searchByGenre") {
-            Movies.find({genres: new RegExp(_.head(Object.values(req.body)), 'ig')})
+            let genreList = _.head(Object.values(req.body)).split(',')
+
+            Movies.find({genres: {$all: new RegExp(genreList.join('|'), 'ig')}})
             .then(movies => {
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
 
                 movies.forEach(movie => {
-                    if(movie.poster !== null){
+                    if(movie.poster != null){
+                        let newPosterLink = utils.changeImage(movie.poster)
+                        movie.poster = newPosterLink
+                    }
+                })
+
+                res.json(utils.extractFields(movies, fields))
+            }, err => next(err))
+            .catch(err => next(err))
+        }
+        else if(_.head(Object.keys(req.body)) === "searchByMpaaRating") {
+            Movies.find({rated: new RegExp(_.head(Object.values(req.body)), 'ig')})
+            .then(movies => {
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+
+                movies.forEach(movie => {
+                    if(movie.poster != null){
                         let newPosterLink = utils.changeImage(movie.poster)
                         movie.poster = newPosterLink
                     }
@@ -360,7 +379,7 @@ movieRouter.route('/search')
                 res.setHeader('Content-Type', 'application/json')
 
                 movies.forEach(movie => {
-                    if(movie.poster !== null){
+                    if(movie.poster != null){
                         let newPosterLink = utils.changeImage(movie.poster)
                         movie.poster = newPosterLink
                     }

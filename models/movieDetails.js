@@ -1,75 +1,9 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const imdbObject = {
-    id: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    rating: {
-        type: Number,
-        required: true
-    },
-    votes: {
-        type: Number,
-        required: true
-    }
-}
-
-const tomatoObject = {
-    meter: {
-        type: Number,
-        required: true
-    },
-    image: {
-        type: String,
-        required: true
-    },
-    rating: {
-        type: Number,
-        required: true
-    },
-    reviews: {
-        type: Number,
-        required: true
-    },
-    fresh: {
-        type: Number,
-        required: true
-    },
-    consensus: {
-        type: String,
-        required: true
-    },
-    userMeter: {
-        type: Number,
-        required: true
-    },
-    userRating: {
-        type: Number,
-        required: true
-    },
-    userReviews: {
-        type: Number,
-        required: true
-    }
-}
-
-const awardsObject = {
-    wins: {
-        type: Number,
-        required: true
-    },
-    nominations: {
-        type: Number,
-        required: true
-    },
-    text: {
-        type: String,
-        required: true
-    }
-}
+const imdbObject = require('./imdb')
+const tomatoObject = require('./tomato')
+const awardsObject = require('./awards')
 
 const movieSchema = new Schema ({
     title: {
