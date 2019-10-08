@@ -27,8 +27,8 @@ exports.viewMovies = (req, res, next) => {
     .catch(err => next(err))
 }
 
-exports.viewMoviesWithOffset = (req, res, next) => {
-    Movies.find({}).skip(Number(req.params.offset)).limit(10)
+exports.viewMoviesWithPages = (req, res, next) => {
+    Movies.find({}).skip(((Number(req.params.page)*10)-10)).limit(10)
     .then(movies => {
         if (movies !== null) {
             res.statusCode = 200

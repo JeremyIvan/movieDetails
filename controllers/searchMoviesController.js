@@ -3,7 +3,7 @@ const _ = require('lodash')
 const searchMethodUtil = require('../utils/searchMethodsUtil')
 
 exports.searchMovies = (req, res, next) => {
-    let fields = ['_id', 'title', 'plot', 'actors', 'poster', 'rated', 'genres']
+    let fields = ['_id', 'title', 'plot', 'actors', 'poster', 'rated', 'genres', 'banner', 'link']
 
     if(Object.keys(req.body).length === 1){
         if(_.head(Object.keys(req.body)) === "searchByTitle") {

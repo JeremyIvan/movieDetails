@@ -4,7 +4,7 @@ const multer = require('multer')
 
 var upload = multer()
 
-const cors = require('../cors')
+const cors = require('../utils/cors')
 
 const viewMovieController = require('../controllers/viewMovieController')
 const viewMoviesByWriterController = require('../controllers/viewMoviesByWriterController')
@@ -20,9 +20,9 @@ movieRouter.route('/movies')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewMovies)
 
-movieRouter.route('/movies/:offset')
+movieRouter.route('/movies/:page')
 .options(cors.corsWithOptions, cors.sendStatus)
-.get(cors.cors, viewMovieController.viewMoviesWithOffset)
+.get(cors.cors, viewMovieController.viewMoviesWithPages)
 
 // Title and Plot
 movieRouter.route('/movie/:movieId')
@@ -54,11 +54,12 @@ movieRouter.route('/update/:movieId')
 .get(cors.cors, updateMovieController.getMovieToUpdateById)
 .post(cors.cors, upload.none(), updateMovieController.updateMovieById)
 
+// Delete Movies by ID
 movieRouter.route('/delete')
 .options(cors.corsWithOptions, cors.sendStatus)
 .post(cors.corsWithOptions, upload.none(), deleteMovieController.deleteMovieById)
 
-// search by title/plot/actor/all
+// Search documents by
 movieRouter.route('/search')
 .options(cors.corsWithOptions, cors.sendStatus)
 .post(cors.cors, upload.none(), searchMoviesController.searchMovies)

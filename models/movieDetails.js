@@ -48,6 +48,8 @@ const movieSchema = new Schema ({
         required: true
     },
     poster: String,
+    banner: String,
+    link: String,
     imdb: imdbObject,
     tomato: tomatoObject,
     metacritic: Number,
