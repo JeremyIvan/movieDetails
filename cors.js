@@ -18,3 +18,7 @@ let corsOptionsDelegate = (req, callback) => {
 
 exports.cors = cors()
 exports.corsWithOptions = cors(corsOptionsDelegate)
+
+exports.sendStatus = (req, res) => { 
+    res.sendStatus(200) 
+}
