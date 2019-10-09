@@ -5,7 +5,7 @@ const Movies = require('../models/movieDetails')
 const utils = require('./util')
 
 exports.searchByTitle = (req, res, next, fields) => {
-    Movies.find({title: new RegExp(_.head(Object.values(req.body)), 'ig')})
+    Movies.find({title: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
             .then(movies => {
                 res.statusCode = 200
                 res.setHeader('Content-Type', 'application/json')
@@ -23,7 +23,7 @@ exports.searchByTitle = (req, res, next, fields) => {
 }
 
 exports.searchByPlot = (req, res, next, fields) => {
-    Movies.find({plot: new RegExp(_.head(Object.values(req.body)), 'ig')})
+    Movies.find({plot: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
     .then(movies => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
@@ -41,7 +41,7 @@ exports.searchByPlot = (req, res, next, fields) => {
 }
 
 exports.searchByActor = (req, res, next, fields) => {
-    Movies.find({actors: new RegExp(_.head(Object.values(req.body)), 'ig')})
+    Movies.find({actors: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
     .then(movies => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
@@ -67,7 +67,7 @@ exports.searchByGenre = (req, res, next, fields) => {
         regexGenreList.push(genre)
     })
 
-    Movies.find({genres: {$all: regexGenreList}})
+    Movies.find({genres: {$all: regexGenreList}}).limit(10)
     .then(movies => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
@@ -85,7 +85,7 @@ exports.searchByGenre = (req, res, next, fields) => {
 }
 
 exports.searchByMpaaRating = (req, res, next, fields) => {
-    Movies.find({rated: new RegExp(_.head(Object.values(req.body)), 'ig')})
+    Movies.find({rated: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
     .then(movies => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
@@ -111,7 +111,7 @@ exports.searchByAll = (req, res, next, fields) => {
                 {actors: new RegExp(_.head(Object.values(req.body)), 'ig')}
             ]}
         ]}
-    )
+    ).limit(10)
     .then(movies => {
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')

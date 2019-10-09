@@ -20,6 +20,10 @@ movieRouter.route('/movies')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewMovies)
 
+movieRouter.route('/movies/all')
+.options(cors.corsWithOptions, cors.sendStatus)
+.get(cors.cors, viewMovieController.viewAllMovies)
+
 movieRouter.route('/movies/:page')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewMoviesWithPages)

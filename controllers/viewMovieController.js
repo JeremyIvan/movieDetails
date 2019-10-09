@@ -27,6 +27,31 @@ exports.viewMovies = (req, res, next) => {
     .catch(err => next(err))
 }
 
+exports.viewAllMovies = (req, res, next) => {
+    Movies.find({})
+    .then(movies => {
+        if (movies !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+    
+            movies.forEach(movie => {
+                if(movie.poster != null){
+                    let newPosterLink = utils.changeImage(movie.poster)
+                    movie.poster = newPosterLink
+                }
+            })
+    
+            res.json(movies)
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'No movies found'})
+        }
+    }, err => next(err))
+    .catch(err => next(err))
+}
+
 exports.viewMoviesWithPages = (req, res, next) => {
     Movies.find({}).skip(((Number(req.params.page)*10)-10)).limit(10)
     .then(movies => {
