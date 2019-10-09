@@ -2,15 +2,16 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 
-var upload = multer()
+let upload = multer()
 
-const cors = require('../cors')
+const cors = require('../../utils/cors')
+const authenticate = require('../../utils/authenticate')
 
-const viewMovieController = require('../controllers/viewMovieController')
-const viewMoviesByWriterController = require('../controllers/viewMoviesByWriterController')
-const updateMovieController = require('../controllers/updateMovieController')
-const deleteMovieController = require('../controllers/deleteMovieController')
-const searchMoviesController = require('../controllers/searchMoviesController')
+const viewMovieController = require('../../controllers/movieControllers/viewMovieController')
+const viewMoviesByWriterController = require('../../controllers/movieControllers/viewMoviesByWriterController')
+const updateMovieController = require('../../controllers/movieControllers/updateMovieController')
+const deleteMovieController = require('../../controllers/movieControllers/deleteMovieController')
+const searchMoviesController = require('../../controllers/movieControllers/searchMoviesController')
 
 const movieRouter = express.Router()
 
@@ -18,7 +19,7 @@ movieRouter.use(bodyParser.json())
 
 movieRouter.route('/movies')
 .options(cors.corsWithOptions, cors.sendStatus)
-.get(cors.cors, viewMovieController.viewMovies)
+.get(cors.cors, authenticate.jwtCheck, viewMovieController.viewMovies)
 
 movieRouter.route('/movies/:offset')
 .options(cors.corsWithOptions, cors.sendStatus)
@@ -29,6 +30,7 @@ movieRouter.route('/movie/:movieId')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewMovieTitleAndPlot)
 
+// Show all data
 movieRouter.route('/movie/:movieId/all')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewAllMovieData)
@@ -42,6 +44,10 @@ movieRouter.route('/movie/:movieId/countries')
 movieRouter.route('/movie/:movieId/writers')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewMovieWriters)
+
+movieRouter.route('/movie/getRandomMovie')
+.options(cors.corsWithOptions, cors.sendStatus)
+.get(cors.cors, viewMovieController.viewOneRandomMovie)
 
 // Search for Movies by writer
 movieRouter.route('/writers')

@@ -1,4 +1,4 @@
-const Movies = require('../models/movieDetails')
+const Movies = require('../../models/movie/movieDetails')
 
 exports.deleteMovieById = (req, res, next) => {
     Movies.findByIdAndRemove(req.body.movieId)

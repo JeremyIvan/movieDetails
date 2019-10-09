@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const Movies = require('../models/movieDetails')
+const Movies = require('../models/movie/movieDetails')
 
 const utils = require('./util')
 
@@ -59,10 +59,17 @@ exports.searchByActor = (req, res, next, fields) => {
 }
 
 exports.searchByGenre = (req, res, next, fields) => {
-    let genreList = _.head(Object.values(req.body)).split(',')
+    let genreList = _.head(Object.values(req.body)).split(', ')
+    let regexGenreList = []
 
-    Movies.find({genres: {$all: new RegExp(genreList.join('|'), 'ig')}})
+    genreList.forEach(genre => {
+        genre = new RegExp(genre, 'ig')
+        regexGenreList.push(genre)
+    })
+
+    Movies.find({genres: {$all: regexGenreList}})
     .then(movies => {
+        
         res.statusCode = 200
         res.setHeader('Content-Type', 'application/json')
 
@@ -72,7 +79,6 @@ exports.searchByGenre = (req, res, next, fields) => {
                 movie.poster = newPosterLink
             }
         })
-
         res.json(utils.extractFields(movies, fields))
     }, err => next(err))
     .catch(err => next(err))

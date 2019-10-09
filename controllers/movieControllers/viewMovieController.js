@@ -1,6 +1,6 @@
-const Movies = require('../models/movieDetails')
+const Movies = require('../../models/movie/movieDetails')
 
-const utils = require('../utils/util')
+const utils = require('../../utils/util')
 
 exports.viewMovies = (req, res, next) => {
     Movies.find({}).limit(10)
@@ -122,6 +122,31 @@ exports.viewMovieWriters = (req, res, next) => {
             res.setHeader('Content-Type', 'application/json')
             res.json({status: 'Movie not found'})
         }
+    }, err => next(err))
+    .catch(err => next(err))
+}
+
+exports.viewOneRandomMovie = (req, res, next) => {
+    console.log("test")
+    Movies.aggregate(
+        [
+            { 
+                $sample: { size: 1 } 
+            }
+        ]
+    )
+    .then(movie => {
+        console.log("Brandi <3")
+        // if (movie !== null) {
+        //     res.statusCode = 200
+        //     res.setHeader('Content-Type', 'application/json')
+            // res.json({test: 'hello'})
+        // }
+        // else {
+        //     res.status = 404
+        //     res.setHeader('Content-Type', 'application/json')
+        //     res.json({status: 'Movie not found'})
+        // }
     }, err => next(err))
     .catch(err => next(err))
 }
