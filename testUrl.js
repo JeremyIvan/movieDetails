@@ -14,12 +14,34 @@
 
 // --------------------------------
 
+var request = require("request");
+
+var options = { method: 'POST',
+  url: 'https://moviedetails.auth0.com/oauth/token',
+  headers: { 'content-type': 'application/json' },
+  body: '{"client_id":"m6EPMuxhFWrDnglh5Gzaqwloda8BhnD1","client_secret":"lD-M-WczlqcIusm2D9f0pGb-Cofl3Pp3hxEzjZWYUXp98ehZXqs2DFeH9y6NsNwe","audience":"https://movie-details/","grant_type":"client_credentials"}' };
+
+request(options, function (error, response, body) {
+  if (error) throw new Error(error);
+
+  console.log(body);
+});
+
+// --------------------------------
+
 // var request = require("request");
 
-// var options = { method: 'POST',
-//   url: 'https://moviedetails.auth0.com/oauth/token',
-//   headers: { 'content-type': 'application/json' },
-//   body: '{"client_id":"CnAsdOJcOuHrjwdmpjph0jKTVTbwmVYe","client_secret":"Ksvx6AEHTFok0R0XxzpHzVFKt5VJzBRUZSZT1-MLpNwSvmeEN_l8o2esMYevVMQy","audience":"https://movie-details/","grant_type":"client_credentials"}' };
+// var options = {
+//   method: 'POST',
+//   url: 'https://auth0-express-test.auth0.com/oauth/token',
+//   headers: {'content-type': 'application/x-www-form-urlencoded'},
+//   form: {
+//     grant_type: 'client_credentials',
+//     client_id: 'yITztqK52SBxXkP5WSkobccQ3P06Oo7q',
+//     client_secret: 'YOUR_CLIENT_SECRET',
+//     audience: 'YOUR_API_IDENTIFIER'
+//   }
+// };
 
 // request(options, function (error, response, body) {
 //   if (error) throw new Error(error);
@@ -29,17 +51,19 @@
 
 // --------------------------------
 
+// sample with id and secret of unauthorized app getting access token
+
 var request = require("request");
 
 var options = {
   method: 'POST',
-  url: 'https://auth0-express-test.auth0.com/oauth/token',
+  url: 'https://moviedetails.auth0.com/oauth/token',
   headers: {'content-type': 'application/x-www-form-urlencoded'},
   form: {
     grant_type: 'client_credentials',
-    client_id: 'yITztqK52SBxXkP5WSkobccQ3P06Oo7q',
-    client_secret: 'YOUR_CLIENT_SECRET',
-    audience: 'YOUR_API_IDENTIFIER'
+    client_id: '4Jbyr63iIIdYfoGzDPo45SAkyAOcywS3',
+    client_secret: 'EpZTRc42labBpbB-W1VZnwdfgVYSa6NTaFh6tPIAYbb00fLVdJdJlHsUkx6cB4SU',
+    audience: 'https://movie-details/'
   }
 };
 

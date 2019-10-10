@@ -1,12 +1,10 @@
-var express = require('express');
-var app = express();
-var jwt = require('express-jwt');
-var jwks = require('jwks-rsa');
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 
 const config = require('./config')
 
 exports.jwtCheck = jwt({
-      secret: jwks.expressJwtSecret({
+    secret: jwksRsa.expressJwtSecret({
           cache: true,
           rateLimit: true,
           jwksRequestsPerMinute: 5,
@@ -15,4 +13,4 @@ exports.jwtCheck = jwt({
     audience: config.audience,
     issuer: config.issuer,
     algorithms: config.algorithms
-});
+})

@@ -6,7 +6,6 @@ const logger = require('morgan');
 const mongoose = require('mongoose')
 
 let movieRouter = require('./routes/movieRouters/movieRouter')
-let userRouter = require('./routes/userRouters/userRouter')
 
 const authenticate = require('./utils/authenticate')
 
@@ -24,10 +23,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-app.use('/user', userRouter)
-
-// app.use(authenticate.jwtCheck);
 
 app.use('/', movieRouter)
 

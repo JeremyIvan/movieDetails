@@ -44,10 +44,7 @@ const movieSchema = new Schema ({
         type: [String],
         required: true
     },
-    plot: {
-        type: String,
-        required: true
-    },
+    plot: String,
     poster: String,
     banner: String,
     imdb: imdbObject,
