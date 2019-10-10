@@ -6,9 +6,6 @@ exports.viewMovies = (req, res, next) => {
     Movies.find({}).limit(10)
     .then(movies => {
         if (movies !== null) {
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-    
             movies.forEach(movie => {
                 if(movie.poster != null){
                     let newPosterLink = utils.changeImage(movie.poster)
@@ -16,6 +13,8 @@ exports.viewMovies = (req, res, next) => {
                 }
             })
     
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json(movies)
         }
         else {
@@ -31,16 +30,15 @@ exports.viewAllMovies = (req, res, next) => {
     Movies.find({})
     .then(movies => {
         if (movies !== null) {
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-    
             movies.forEach(movie => {
                 if(movie.poster != null){
                     let newPosterLink = utils.changeImage(movie.poster)
                     movie.poster = newPosterLink
                 }
             })
-    
+
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json(movies)
         }
         else {
@@ -56,9 +54,6 @@ exports.viewMoviesWithPages = (req, res, next) => {
     Movies.find({}).skip(((Number(req.params.page)*10)-10)).limit(10)
     .then(movies => {
         if (movies !== null) {
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-    
             movies.forEach(movie => {
                 if(movie.poster != null){
                     let newPosterLink = utils.changeImage(movie.poster)
@@ -66,6 +61,8 @@ exports.viewMoviesWithPages = (req, res, next) => {
                 }
             })
     
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json(movies)
         }
         else {

@@ -58,12 +58,12 @@ movieRouter.route('/writers')
 movieRouter.route('/update/:movieId')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, updateMovieController.getMovieToUpdateById)
-.post(cors.cors, upload.none(), updateMovieController.updateMovieById)
+.post(cors.cors, upload.none(), authenticate.jwtCheck, updateMovieController.updateMovieById)
 
 // Delete Movies by ID
 movieRouter.route('/delete')
 .options(cors.corsWithOptions, cors.sendStatus)
-.post(cors.corsWithOptions, upload.none(), deleteMovieController.deleteMovieById)
+.post(cors.cors, upload.none(), authenticate.jwtCheck, deleteMovieController.deleteMovieById)
 
 // Search documents by
 movieRouter.route('/search')

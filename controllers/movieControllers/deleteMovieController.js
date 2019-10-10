@@ -1,6 +1,8 @@
 const Movies = require('../../models/movieModels/movieDetails')
 
 exports.deleteMovieById = (req, res, next) => {
+    console.log(req.headers);
+
     Movies.findByIdAndRemove(req.body.movieId)
     .then(movie => {
         if ( movie != null) {
