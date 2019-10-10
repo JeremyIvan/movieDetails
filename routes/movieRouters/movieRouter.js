@@ -2,9 +2,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 
-var upload = multer()
+const upload = multer()
 
 const cors = require('../../utils/cors')
+
+const authenticate = require('../../utils/authenticate')
 
 const viewMovieController = require('../../controllers/movieControllers/viewMovieController')
 const viewMoviesByWriterController = require('../../controllers/movieControllers/viewMoviesByWriterController')
