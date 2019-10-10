@@ -61,12 +61,12 @@ movieRouter.route('/update/:movieId')
 .post(cors.cors, upload.none(), updateMovieController.updateMovieById)
 
 movieRouter.route('/delete')
-.options(cors.corsWithOptions, cors.sendStatus)
+.options(cors.cors, cors.sendStatus)
 .post(cors.corsWithOptions, upload.none(), deleteMovieController.deleteMovieById)
 
 // search by title/plot/actor/all
 movieRouter.route('/search')
-.options(cors.corsWithOptions, cors.sendStatus)
+.options(cors.cors, cors.sendStatus)
 .post(cors.cors, upload.none(), searchMoviesController.searchMovies)
 
 module.exports = movieRouter

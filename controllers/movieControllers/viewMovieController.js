@@ -3,6 +3,8 @@ const Movies = require('../../models/movie/movieDetails')
 const utils = require('../../utils/util')
 
 exports.viewMovies = (req, res, next) => {
+
+    console.log(req.headers)
     Movies.find({}).limit(10)
     .then(movies => {
         if (movies !== null) {

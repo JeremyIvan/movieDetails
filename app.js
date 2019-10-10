@@ -7,8 +7,6 @@ const mongoose = require('mongoose')
 
 let movieRouter = require('./routes/movieRouters/movieRouter')
 
-const authenticate = require('./utils/authenticate')
-
 const url = 'mongodb+srv://jrsalve77:Ruujeremy565+@cluster0-qaaa0.mongodb.net/video?retryWrites=true&w=majority'
 const connect = mongoose.connect(url, { useNewUrlParser: true })
 

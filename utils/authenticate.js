@@ -10,7 +10,7 @@ exports.jwtCheck = jwt({
           jwksRequestsPerMinute: 5,
           jwksUri: config.jwksUri
     }),
-    audience: config.audience,
+    audience: config.clientId,
     issuer: config.issuer,
     algorithms: config.algorithms
 })
