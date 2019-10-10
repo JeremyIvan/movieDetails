@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const searchMethodUtil = require('../utils/searchMethodsUtil')
+const searchMethodUtil = require('../../utils/searchMethodsUtil')
 
 exports.searchMovies = (req, res, next) => {
     let fields = ['_id', 'title', 'plot', 'actors', 'poster', 'rated', 'genres', 'banner', 'link']

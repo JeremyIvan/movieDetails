@@ -1,6 +1,6 @@
-const Movies = require('../models/movieDetails')
+const Movies = require('../../models/movieModels/movieDetails')
 
-const utils = require('../utils/util')
+const utils = require('../../utils/util')
 
 exports.viewMovies = (req, res, next) => {
     Movies.find({}).limit(10)

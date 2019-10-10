@@ -4,13 +4,13 @@ const multer = require('multer')
 
 var upload = multer()
 
-const cors = require('../utils/cors')
+const cors = require('../../utils/cors')
 
-const viewMovieController = require('../controllers/viewMovieController')
-const viewMoviesByWriterController = require('../controllers/viewMoviesByWriterController')
-const updateMovieController = require('../controllers/updateMovieController')
-const deleteMovieController = require('../controllers/deleteMovieController')
-const searchMoviesController = require('../controllers/searchMoviesController')
+const viewMovieController = require('../../controllers/movieControllers/viewMovieController')
+const viewMoviesByWriterController = require('../../controllers/movieControllers/viewMoviesByWriterController')
+const updateMovieController = require('../../controllers/movieControllers/updateMovieController')
+const deleteMovieController = require('../../controllers/movieControllers/deleteMovieController')
+const searchMoviesController = require('../../controllers/movieControllers/searchMoviesController')
 
 const movieRouter = express.Router()
 

@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose')
 
-let movieRouter = require('./routes/movieRouter')
+let movieRouter = require('./routes/movieRouters/movieRouter')
 
 const url = 'mongodb+srv://jrsalve77:Ruujeremy565+@cluster0-qaaa0.mongodb.net/video?retryWrites=true&w=majority'
 const connect = mongoose.connect(url, { useNewUrlParser: true })

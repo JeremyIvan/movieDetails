@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const Movies = require('../models/movieDetails')
+const Movies = require('../models/movieModels/movieDetails')
 
 const utils = require('./util')
 
