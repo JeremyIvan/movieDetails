@@ -8,12 +8,7 @@ exports.viewMovies = (req, res, next) => {
     Movies.find({}).limit(LIMIT_PER_PAGE)
     .then(movies => {
         if (movies !== null) {
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
     
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
@@ -32,12 +27,7 @@ exports.viewAllMovies = (req, res, next) => {
     Movies.find({})
     .then(movies => {
         if (movies !== null) {
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
 
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
@@ -56,12 +46,7 @@ exports.viewMoviesWithPages = (req, res, next) => {
     Movies.find({}).skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
     .then(movies => {
         if (movies !== null) {
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
     
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
@@ -100,10 +85,7 @@ exports.viewAllMovieData = (req, res, next) => {
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
     
-            if(movie.poster != null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
+            utils.formatImage(movie)
     
             res.json(movie)
         }
@@ -154,12 +136,7 @@ exports.get2016Movies = (req, res, next) => {
     Movies.find({year: {$gte: 2016}})
     .then(movies => {
         if(movies !== null) {
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
 
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')

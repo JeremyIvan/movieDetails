@@ -16,20 +16,14 @@ exports.searchByTitle = (req, res, next, fields) => {
         .then(movies => {
             let nextPage = true
 
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
 
             if(currentPageMovieCount <= LIMIT_PER_PAGE){
                 nextPage = false
             }
 
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
         }, err => next(err))
         .catch(err => next(err))
@@ -46,20 +40,14 @@ exports.searchByPlot = (req, res, next, fields) => {
         .then(movies => {
             let nextPage = true
 
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
 
             if(currentPageMovieCount <= LIMIT_PER_PAGE){
                 nextPage = false
             }
 
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
         }, err => next(err))
         .catch(err => next(err))
@@ -76,20 +64,14 @@ exports.searchByActor = (req, res, next, fields) => {
         .then(movies => {
             let nextPage = true
 
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
 
             if(currentPageMovieCount <= LIMIT_PER_PAGE){
                 nextPage = false
             }
 
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
         }, err => next(err))
         .catch(err => next(err))
@@ -113,21 +95,15 @@ exports.searchByGenre = (req, res, next, fields) => {
         .skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
         .then(movies => {
             let nextPage = true
-            
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
 
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
 
             if(currentPageMovieCount <= LIMIT_PER_PAGE){
                 nextPage = false
             }
-
+            
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
         }, err => next(err))
         .catch(err => next(err))
@@ -144,20 +120,14 @@ exports.searchByAll = (req, res, next, fields) => {
         .then(movies => {
             let nextPage = true
 
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-
-            movies.forEach(movie => {
-                if(movie.poster != null){
-                    let newPosterLink = utils.changeImage(movie.poster)
-                    movie.poster = newPosterLink
-                }
-            })
+            movies.forEach(utils.formatImage)
             
             if(currentPageMovieCount <= LIMIT_PER_PAGE){
                 nextPage = false
             }
 
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
         }, err => next(err))
         .catch(err => next(err))

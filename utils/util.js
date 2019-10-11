@@ -16,12 +16,17 @@ exports.extractFields = (data, fields) => {
     return results
 }
 
-exports.changeImage = (poster) => {
-    let posterLink = poster
+changeImage = (poster) => {
     let changeString = "https"
     let regex = /https?/g
 
-    let output = posterLink.replace(regex, changeString)
+    let output = poster.replace(regex, changeString)
 
     return output
+}
+
+exports.formatImage = (movie) => {
+    if(movie.poster != null){
+        movie.poster = changeImage(movie.poster)
+    }
 }
