@@ -14,9 +14,9 @@ connect.then((db) => {
   console.log("Connected correctly to server")
 })
 
-let app = express();
+var app = express();
 
-app.use(logger('dev'));
+app.use(logger('short'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

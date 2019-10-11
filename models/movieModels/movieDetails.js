@@ -6,7 +6,6 @@ const tomatoObject = require('./tomato')
 const awardsObject = require('./awards')
 
 const movieSchema = new Schema ({
-    _id: String,
     title: {
         type: String,
         required: true,
@@ -44,12 +43,15 @@ const movieSchema = new Schema ({
         type: [String],
         required: true
     },
-    plot: String,
+    plot: {
+        type: String,
+        required: true
+    },
     poster: String,
     banner: String,
+    link: String,
     imdb: imdbObject,
     tomato: tomatoObject,
-    link: String,
     metacritic: Number,
     awards: awardsObject,
     type: {

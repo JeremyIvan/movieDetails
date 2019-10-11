@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const Movies = require('../../models/movie/movieDetails')
+const Movies = require('../../models/movieModels/movieDetails')
 
 exports.getMovieToUpdateById = (req, res, next) => {
     Movies.findById(req.params.movieId)
@@ -8,7 +8,7 @@ exports.getMovieToUpdateById = (req, res, next) => {
         if(movie !== null) {
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
-            res.json({title: movie.title, plot: movie.plot})
+            res.json(movie)
         }
         else {
             res.status = 404

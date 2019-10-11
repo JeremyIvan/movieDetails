@@ -1,8 +1,6 @@
 const _ = require('lodash')
 
-const Movies = require('../../models/movie/movieDetails')
-
-const utils = require('../../utils/util')
+const Movies = require('../../models/movieModels/movieDetails')
 
 exports.viewMoviesByWriter = (req, res, next) => {
     Movies.find({writers: req.body.movieWriter})

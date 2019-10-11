@@ -2,9 +2,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 
-let upload = multer()
+const upload = multer()
 
 const cors = require('../../utils/cors')
+
 const authenticate = require('../../utils/authenticate')
 
 const viewMovieController = require('../../controllers/movieControllers/viewMovieController')
@@ -19,18 +20,21 @@ movieRouter.use(bodyParser.json())
 
 movieRouter.route('/movies')
 .options(cors.corsWithOptions, cors.sendStatus)
-.get(cors.cors, authenticate.jwtCheck, viewMovieController.viewMovies)
+.get(cors.cors, viewMovieController.viewMovies)
 
-movieRouter.route('/movies/:offset')
+movieRouter.route('/movies/all')
 .options(cors.corsWithOptions, cors.sendStatus)
-.get(cors.cors, viewMovieController.viewMoviesWithOffset)
+.get(cors.cors, viewMovieController.viewAllMovies)
+
+movieRouter.route('/movies/:page')
+.options(cors.corsWithOptions, cors.sendStatus)
+.get(cors.cors, viewMovieController.viewMoviesWithPages)
 
 // Title and Plot
 movieRouter.route('/movie/:movieId')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewMovieTitleAndPlot)
 
-// Show all data
 movieRouter.route('/movie/:movieId/all')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewAllMovieData)
@@ -45,10 +49,6 @@ movieRouter.route('/movie/:movieId/writers')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, viewMovieController.viewMovieWriters)
 
-movieRouter.route('/movie/getRandomMovie')
-.options(cors.corsWithOptions, cors.sendStatus)
-.get(cors.cors, viewMovieController.viewOneRandomMovie)
-
 // Search for Movies by writer
 movieRouter.route('/writers')
 .options(cors.corsWithOptions, cors.sendStatus)
@@ -58,15 +58,20 @@ movieRouter.route('/writers')
 movieRouter.route('/update/:movieId')
 .options(cors.corsWithOptions, cors.sendStatus)
 .get(cors.cors, updateMovieController.getMovieToUpdateById)
-.post(cors.cors, upload.none(), updateMovieController.updateMovieById)
+.post(cors.cors, upload.none(), authenticate.jwtCheck, updateMovieController.updateMovieById)
 
+// Delete Movies by ID
 movieRouter.route('/delete')
-.options(cors.cors, cors.sendStatus)
-.post(cors.corsWithOptions, upload.none(), deleteMovieController.deleteMovieById)
+.options(cors.corsWithOptions, cors.sendStatus)
+.post(cors.cors, upload.none(), authenticate.jwtCheck, deleteMovieController.deleteMovieById)
 
-// search by title/plot/actor/all
-movieRouter.route('/search')
-.options(cors.cors, cors.sendStatus)
+// Search documents by
+movieRouter.route('/search/:page')
+.options(cors.corsWithOptions, cors.sendStatus)
 .post(cors.cors, upload.none(), searchMoviesController.searchMovies)
+
+movieRouter.route('/2016Movies')
+.options(cors.cors, cors.sendStatus)
+.get(cors.cors, viewMovieController.get2016Movies)
 
 module.exports = movieRouter

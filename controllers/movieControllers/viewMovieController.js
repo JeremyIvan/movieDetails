@@ -1,16 +1,13 @@
-const Movies = require('../../models/movie/movieDetails')
+const Movies = require('../../models/movieModels/movieDetails')
 
 const utils = require('../../utils/util')
 
-exports.viewMovies = (req, res, next) => {
+const LIMIT_PER_PAGE = 10
 
-    console.log(req.headers)
-    Movies.find({}).limit(10)
+exports.viewMovies = (req, res, next) => {
+    Movies.find({}).limit(LIMIT_PER_PAGE)
     .then(movies => {
         if (movies !== null) {
-            res.statusCode = 200
-            res.setHeader('Content-Type', 'application/json')
-    
             movies.forEach(movie => {
                 if(movie.poster != null){
                     let newPosterLink = utils.changeImage(movie.poster)
@@ -18,6 +15,8 @@ exports.viewMovies = (req, res, next) => {
                 }
             })
     
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json(movies)
         }
         else {
@@ -29,13 +28,34 @@ exports.viewMovies = (req, res, next) => {
     .catch(err => next(err))
 }
 
-exports.viewMoviesWithOffset = (req, res, next) => {
-    Movies.find({}).skip(Number(req.params.offset)).limit(10)
+exports.viewAllMovies = (req, res, next) => {
+    Movies.find({})
     .then(movies => {
         if (movies !== null) {
+            movies.forEach(movie => {
+                if(movie.poster != null){
+                    let newPosterLink = utils.changeImage(movie.poster)
+                    movie.poster = newPosterLink
+                }
+            })
+
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
-    
+            res.json(movies)
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'No movies found'})
+        }
+    }, err => next(err))
+    .catch(err => next(err))
+}
+
+exports.viewMoviesWithPages = (req, res, next) => {
+    Movies.find({}).skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
+    .then(movies => {
+        if (movies !== null) {
             movies.forEach(movie => {
                 if(movie.poster != null){
                     let newPosterLink = utils.changeImage(movie.poster)
@@ -43,6 +63,8 @@ exports.viewMoviesWithOffset = (req, res, next) => {
                 }
             })
     
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
             res.json(movies)
         }
         else {
@@ -128,27 +150,19 @@ exports.viewMovieWriters = (req, res, next) => {
     .catch(err => next(err))
 }
 
-exports.viewOneRandomMovie = (req, res, next) => {
-    console.log("test")
-    Movies.aggregate(
-        [
-            { 
-                $sample: { size: 1 } 
-            }
-        ]
-    )
-    .then(movie => {
-        console.log("Brandi <3")
-        // if (movie !== null) {
-        //     res.statusCode = 200
-        //     res.setHeader('Content-Type', 'application/json')
-            // res.json({test: 'hello'})
-        // }
-        // else {
-        //     res.status = 404
-        //     res.setHeader('Content-Type', 'application/json')
-        //     res.json({status: 'Movie not found'})
-        // }
+exports.get2016Movies = (req, res, next) => {
+    Movies.find({year: {$gte: 2016}})
+    .then(movies => {
+        if(movies !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.json(movies)
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
     }, err => next(err))
     .catch(err => next(err))
 }
