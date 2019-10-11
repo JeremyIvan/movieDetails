@@ -20,9 +20,6 @@ exports.searchMovies = (req, res, next) => {
         else if(_.head(Object.keys(req.body)) === "searchByGenre") {
             searchMethodUtil.searchByGenre(req, res, next, fields)
         }
-        else if(_.head(Object.keys(req.body)) === "searchByMpaaRating") {
-            searchMethodUtil.searchByMpaaRating(req, res, next, fields)
-        }
         else if(_.head(Object.keys(req.body)) === "searchByAll") {
             searchMethodUtil.searchByAll(req, res, next, fields)
         }
