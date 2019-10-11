@@ -154,6 +154,13 @@ exports.get2016Movies = (req, res, next) => {
     Movies.find({year: {$gte: 2016}})
     .then(movies => {
         if(movies !== null) {
+            movies.forEach(movie => {
+                if(movie.poster != null){
+                    let newPosterLink = utils.changeImage(movie.poster)
+                    movie.poster = newPosterLink
+                }
+            })
+
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
             res.json(movies)
