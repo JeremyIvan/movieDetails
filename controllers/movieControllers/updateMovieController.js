@@ -2,6 +2,8 @@ const _ = require('lodash')
 
 const Movies = require('../../models/movieModels/movieDetails')
 
+const IS_EMPTY = 0
+
 exports.getMovieToUpdateById = (req, res, next) => {
     Movies.findById(req.params.movieId)
     .then(movie => {
@@ -23,7 +25,7 @@ exports.updateMovieById = (req, res, next) => {
     Movies.findById(req.params.movieId)
     .then(movie => {
         if(movie !== null){
-            if(!(Object.keys(req.body).length === 0) && movie[_.head(Object.keys(req.body))] != _.head(Object.values(req.body)) ) {
+            if(!(Object.keys(req.body).length === IS_EMPTY) && movie[_.head(Object.keys(req.body))] != _.head(Object.values(req.body)) ) {
                 Movies.findByIdAndUpdate(req.params.movieId, 
                     { $set: req.body },
                     { new: true })

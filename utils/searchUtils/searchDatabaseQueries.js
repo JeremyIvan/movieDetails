@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const Movies = require('../models/movieModels/movieDetails')
+const Movies = require('../../models/movieModels/movieDetails')
 
 exports.searchByTitle = req => Movies.find({title: new RegExp(_.head(Object.values(req.body)), 'ig')})
 

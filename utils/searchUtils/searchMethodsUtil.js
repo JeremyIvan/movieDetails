@@ -2,7 +2,7 @@ const _ = require('lodash')
 
 const searchQuery = require('./searchDatabaseQueries')
 
-const utils = require('./util')
+const utils = require('../util')
 
 const LIMIT_PER_PAGE = 10
 
