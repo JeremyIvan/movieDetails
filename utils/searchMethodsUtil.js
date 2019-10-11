@@ -1,61 +1,100 @@
 const _ = require('lodash')
 
-const Movies = require('../models/movieModels/movieDetails')
+const searchQuery = require('./searchDatabaseQueries')
 
 const utils = require('./util')
 
+const LIMIT_PER_PAGE = 10
+
 exports.searchByTitle = (req, res, next, fields) => {
-    Movies.find({title: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
-            .then(movies => {
-                res.statusCode = 200
-                res.setHeader('Content-Type', 'application/json')
+    searchQuery.searchByTitle(req).count()
+        .then(totalMoviesFound => {
+            let currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)
 
-                movies.forEach(movie => {
-                    if(movie.poster != null){
-                        let newPosterLink = utils.changeImage(movie.poster)
-                        movie.poster = newPosterLink
+            searchQuery.searchByTitle(req)
+                .skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
+                .then(movies => {
+                    let nextPage = true
+
+                    res.statusCode = 200
+                    res.setHeader('Content-Type', 'application/json')
+
+                    movies.forEach(movie => {
+                        if(movie.poster != null){
+                            let newPosterLink = utils.changeImage(movie.poster)
+                            movie.poster = newPosterLink
+                        }
+                    })
+
+                    if(currentPageMovieCount <= LIMIT_PER_PAGE){
+                        nextPage = false
                     }
-                })
 
-                res.json(utils.extractFields(movies, fields))
-            }, err => next(err))
-            .catch(err => next(err))
+                    res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
+                }, err => next(err))
+                .catch(err => next(err))
+        })
 }
 
 exports.searchByPlot = (req, res, next, fields) => {
-    Movies.find({plot: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
-    .then(movies => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
+    searchQuery.searchByPlot(req).count()
+        .then(totalMoviesFound => {
+            let currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)
 
-        movies.forEach(movie => {
-            if(movie.poster != null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
+            searchQuery.searchByPlot(req)
+                .skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
+                .then(movies => {
+                    let nextPage = true
+
+                    res.statusCode = 200
+                    res.setHeader('Content-Type', 'application/json')
+
+                    movies.forEach(movie => {
+                        if(movie.poster != null){
+                            let newPosterLink = utils.changeImage(movie.poster)
+                            movie.poster = newPosterLink
+                        }
+                    })
+
+                    if(currentPageMovieCount <= LIMIT_PER_PAGE){
+                        nextPage = false
+                    }
+
+                    res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
+                }, err => next(err))
+                .catch(err => next(err))
+
         })
-
-        res.json(utils.extractFields(movies, fields))
-    }, err => next(err))
-    .catch(err => next(err))
 }
 
 exports.searchByActor = (req, res, next, fields) => {
-    Movies.find({actors: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
-    .then(movies => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
+    searchQuery.searchByActor(req).count()
+        .then(totalMoviesFound => {
+            let currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)
 
-        movies.forEach(movie => {
-            if(movie.poster != null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
+            searchQuery.searchByActor(req)
+                .skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
+                .then(movies => {
+                    let nextPage = true
+
+                    res.statusCode = 200
+                    res.setHeader('Content-Type', 'application/json')
+
+                    movies.forEach(movie => {
+                        if(movie.poster != null){
+                            let newPosterLink = utils.changeImage(movie.poster)
+                            movie.poster = newPosterLink
+                        }
+                    })
+
+                    if(currentPageMovieCount <= LIMIT_PER_PAGE){
+                        nextPage = false
+                    }
+
+                    res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
+                }, err => next(err))
+                .catch(err => next(err))
         })
-
-        res.json(utils.extractFields(movies, fields))
-    }, err => next(err))
-    .catch(err => next(err))
 }
 
 exports.searchByGenre = (req, res, next, fields) => {
@@ -67,63 +106,91 @@ exports.searchByGenre = (req, res, next, fields) => {
         regexGenreList.push(genre)
     })
 
-    Movies.find({genres: {$all: regexGenreList}}).limit(10)
-    .then(movies => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
+    searchQuery.searchByGenre(regexGenreList).count()
+    .then(totalMoviesFound => {
+        let currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)
+    
+        searchQuery.searchByGenre(regexGenreList)
+            .skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
+            .then(movies => {
+                let nextPage = true
+                
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+    
+                movies.forEach(movie => {
+                    if(movie.poster != null){
+                        let newPosterLink = utils.changeImage(movie.poster)
+                        movie.poster = newPosterLink
+                    }
+                })
 
-        movies.forEach(movie => {
-            if(movie.poster != null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
-        })
+                if(currentPageMovieCount <= LIMIT_PER_PAGE){
+                    nextPage = false
+                }
 
-        res.json(utils.extractFields(movies, fields))
-    }, err => next(err))
-    .catch(err => next(err))
+                res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
+            }, err => next(err))
+            .catch(err => next(err))
+    })
 }
 
 exports.searchByMpaaRating = (req, res, next, fields) => {
-    Movies.find({rated: new RegExp(_.head(Object.values(req.body)), 'ig')}).limit(10)
-    .then(movies => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
+    searchQuery.searchByMpaaRating(req).count()
+    .then(totalMoviesFound => {
+        let currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)
 
-        movies.forEach(movie => {
-            if(movie.poster != null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
-        })
+        searchQuery.searchByMpaaRating(req)
+            .skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
+            .then(movies => {
+                let nextPage = true
+                
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
 
-        res.json(utils.extractFields(movies, fields))
-    }, err => next(err))
-    .catch(err => next(err))
+                movies.forEach(movie => {
+                    if(movie.poster != null){
+                        let newPosterLink = utils.changeImage(movie.poster)
+                        movie.poster = newPosterLink
+                    }
+                })
+
+                if(currentPageMovieCount <= LIMIT_PER_PAGE){
+                    nextPage = false
+                }
+
+                res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
+            }, err => next(err))
+            .catch(err => next(err))
+    })
 }
 
 exports.searchByAll = (req, res, next, fields) => {
-    Movies.find(
-        { $or: [
-            {title: new RegExp(_.head(Object.values(req.body)), 'ig')}, 
-            {$or: [
-                {plot: new RegExp(_.head(Object.values(req.body)), 'ig')}, 
-                {actors: new RegExp(_.head(Object.values(req.body)), 'ig')}
-            ]}
-        ]}
-    ).limit(10)
-    .then(movies => {
-        res.statusCode = 200
-        res.setHeader('Content-Type', 'application/json')
+    searchQuery.searchByMpaaRating(req).count()
+    .then(totalMoviesFound => {
+        let currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)
 
-        movies.forEach(movie => {
-            if(movie.poster != null){
-                let newPosterLink = utils.changeImage(movie.poster)
-                movie.poster = newPosterLink
-            }
-        })
-        
-        res.json(utils.extractFields(movies, fields))
-    }, err => next(err))
-    .catch(err => next(err))
+        searchQuery.searchByAll(req)
+            .skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
+            .then(movies => {
+                let nextPage = true
+
+                res.statusCode = 200
+                res.setHeader('Content-Type', 'application/json')
+
+                movies.forEach(movie => {
+                    if(movie.poster != null){
+                        let newPosterLink = utils.changeImage(movie.poster)
+                        movie.poster = newPosterLink
+                    }
+                })
+                
+                if(currentPageMovieCount <= LIMIT_PER_PAGE){
+                    nextPage = false
+                }
+
+                res.json({data: utils.extractFields(movies, fields), nextPage: nextPage, totalMoviesFound: totalMoviesFound, totalPages: Math.ceil(totalMoviesFound/LIMIT_PER_PAGE)})
+            }, err => next(err))
+            .catch(err => next(err))
+    })
 }

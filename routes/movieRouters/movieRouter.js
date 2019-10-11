@@ -66,8 +66,12 @@ movieRouter.route('/delete')
 .post(cors.cors, upload.none(), authenticate.jwtCheck, deleteMovieController.deleteMovieById)
 
 // Search documents by
-movieRouter.route('/search')
+movieRouter.route('/search/:page')
 .options(cors.corsWithOptions, cors.sendStatus)
 .post(cors.cors, upload.none(), searchMoviesController.searchMovies)
+
+movieRouter.route('/2016Movies')
+.options(cors.cors, cors.sendStatus)
+.get(cors.cors, viewMovieController.get2016Movies)
 
 module.exports = movieRouter

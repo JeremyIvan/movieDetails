@@ -2,8 +2,10 @@ const Movies = require('../../models/movieModels/movieDetails')
 
 const utils = require('../../utils/util')
 
+const LIMIT_PER_PAGE = 10
+
 exports.viewMovies = (req, res, next) => {
-    Movies.find({}).limit(10)
+    Movies.find({}).limit(LIMIT_PER_PAGE)
     .then(movies => {
         if (movies !== null) {
             movies.forEach(movie => {
@@ -51,7 +53,7 @@ exports.viewAllMovies = (req, res, next) => {
 }
 
 exports.viewMoviesWithPages = (req, res, next) => {
-    Movies.find({}).skip(((Number(req.params.page)*10)-10)).limit(10)
+    Movies.find({}).skip(((Number(req.params.page)*LIMIT_PER_PAGE)-LIMIT_PER_PAGE)).limit(LIMIT_PER_PAGE)
     .then(movies => {
         if (movies !== null) {
             movies.forEach(movie => {
@@ -138,6 +140,23 @@ exports.viewMovieWriters = (req, res, next) => {
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')
             res.json({writers: movie.writers})
+        }
+        else {
+            res.status = 404
+            res.setHeader('Content-Type', 'application/json')
+            res.json({status: 'Movie not found'})
+        }
+    }, err => next(err))
+    .catch(err => next(err))
+}
+
+exports.get2016Movies = (req, res, next) => {
+    Movies.find({year: {$gte: 2016}})
+    .then(movies => {
+        if(movies !== null) {
+            res.statusCode = 200
+            res.setHeader('Content-Type', 'application/json')
+            res.json(movies)
         }
         else {
             res.status = 404
