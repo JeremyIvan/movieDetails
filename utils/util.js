@@ -1,32 +1,31 @@
-const _ = require('lodash')
+const _ = require('lodash');
 
 exports.extractFields = (data, fields) => {
-    const extract_fields = (rec) => {
-        let res = {}
-        fields.forEach((path) => {
-            res[path] = _.get(rec, path)
-        })
-        return res
-    }
+  const extractFields = (rec) => {
+    const res = {};
+    fields.forEach((path) => {
+      res[path] = _.get(rec, path);
+    });
+    return res;
+  };
 
-    const results = _(data)
-        .map(extract_fields)
-        .value()
+  const results = _(data)
+    .map(extractFields)
+    .value();
 
-    return results
-}
+  return results;
+};
 
-changeImage = (poster) => {
-    let changeString = "https"
-    let regex = /https?/g
+const changeImage = (poster) => {
+  const changeString = 'https';
+  const regex = /https?/g;
 
-    let output = poster.replace(regex, changeString)
-
-    return output
-}
+  return poster.replace(regex, changeString);
+};
 
 exports.formatImage = (movie) => {
-    if(movie.poster != null){
-        movie.poster = changeImage(movie.poster)
-    }
-}
+  if (movie.poster != null) {
+    // eslint-disable-next-line no-param-reassign
+    movie.poster = changeImage(movie.poster);
+  }
+};
