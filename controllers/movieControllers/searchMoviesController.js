@@ -4,6 +4,8 @@ const searchMethodUtil = require('../../utils/searchUtils/searchMethodsUtil');
 
 const MAX_SEARCH_FIELD = 1;
 
+asss
+
 exports.searchMovies = (req, res, next) => {
   const fields = ['_id', 'title', 'plot', 'actors', 'poster', 'rated', 'genres', 'banner', 'link'];
 
