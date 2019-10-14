@@ -7,7 +7,7 @@ const utils = require('../util');
 const LIMIT_PER_PAGE = 10;
 
 exports.searchByTitle = (req, res, next, fields) => {
-  searchQuery.searchByTitle(req).count()
+  searchQuery.searchByTitle(req).countDocuments()
     .then((totalMoviesFound) => {
       const currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)
         * LIMIT_PER_PAGE) - LIMIT_PER_PAGE);
@@ -40,7 +40,7 @@ exports.searchByTitle = (req, res, next, fields) => {
 };
 
 exports.searchByPlot = (req, res, next, fields) => {
-  searchQuery.searchByPlot(req).count()
+  searchQuery.searchByPlot(req).countDocuments()
     .then((totalMoviesFound) => {
       const currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)
         * LIMIT_PER_PAGE) - LIMIT_PER_PAGE);
@@ -73,7 +73,7 @@ exports.searchByPlot = (req, res, next, fields) => {
 };
 
 exports.searchByActor = (req, res, next, fields) => {
-  searchQuery.searchByActor(req).count()
+  searchQuery.searchByActor(req).countDocuments()
     .then((totalMoviesFound) => {
       const currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)
         * LIMIT_PER_PAGE) - LIMIT_PER_PAGE);
@@ -113,7 +113,7 @@ exports.searchByGenre = (req, res, next, fields) => {
     regexGenreList.push(new RegExp(genre, 'ig'));
   });
 
-  searchQuery.searchByGenre(regexGenreList).count()
+  searchQuery.searchByGenre(regexGenreList).countDocuments()
     .then((totalMoviesFound) => {
       const currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)
         * LIMIT_PER_PAGE) - LIMIT_PER_PAGE);
@@ -146,7 +146,7 @@ exports.searchByGenre = (req, res, next, fields) => {
 };
 
 exports.searchByAll = (req, res, next, fields) => {
-  searchQuery.searchByMpaaRating(req).count()
+  searchQuery.searchByMpaaRating(req).countDocuments()
     .then((totalMoviesFound) => {
       const currentPageMovieCount = totalMoviesFound - ((Number(req.params.page)
         * LIMIT_PER_PAGE) - LIMIT_PER_PAGE);
