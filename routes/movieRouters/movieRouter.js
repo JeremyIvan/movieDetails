@@ -66,4 +66,8 @@ movieRouter.route('/2016Movies')
   .options(cors.cors, cors.sendStatus)
   .get(cors.cors, viewMovieController.get2016Movies);
 
+movieRouter.route('/topRated')
+  .options(cors.cors, cors.sendStatus)
+  .get(cors.cors, viewMovieController.getTopRated);
+
 module.exports = movieRouter;

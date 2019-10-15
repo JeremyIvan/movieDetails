@@ -143,3 +143,26 @@ exports.get2016Movies = (req, res, next) => {
     }, (err) => next(err))
     .catch((err) => next(err));
 };
+
+exports.getTopRated = (req, res, next) => {
+  const fields = ['_id', 'title', 'plot', 'actors', 'poster', 'rated', 'genres', 'banner', 'link'];
+
+  Movies.find({}).sort({ metacritic: -1 }).limit(1)
+    .then((movie) => {
+      if (movie !== null) {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({
+          data: utils.extractFields(movie, fields),
+          nextPage: false,
+          totalMoviesFound: 1,
+          totalPages: 1,
+        });
+      } else {
+        res.status = 404;
+        res.setHeader('Content-Type', 'application/json');
+        res.json({ status: 'Movie not found' });
+      }
+    }, (err) => next(err))
+    .catch((err) => next(err));
+};
